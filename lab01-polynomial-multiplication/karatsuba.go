@@ -7,7 +7,7 @@ func karatsuba(a, b Polynomial) Polynomial{
 	}
 
 	//на небольших многочленах обычное умножение проще и не нагружает стек
-	if (len(a)<=2 || len(b)<=2){
+	if (len(a)<=naiveThreshold || len(b)<=naiveThreshold){
 		return naiveMul(a,b)
 	}
 

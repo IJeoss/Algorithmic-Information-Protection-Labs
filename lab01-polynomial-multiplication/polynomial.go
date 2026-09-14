@@ -3,6 +3,8 @@ package main
 //полином хранит коэффициенты (степень полинома=размер полинома - 1)
 type Polynomial []float64
 
+const naiveThreshold=32
+
 
 //функция сложения полиномов за O(max(n, m))
 func add(a, b Polynomial) Polynomial{

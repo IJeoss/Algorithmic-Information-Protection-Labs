@@ -19,7 +19,7 @@ func toom3(a, b Polynomial) Polynomial{
 	}
 
 	//на маленьких входах можно заменить обычным умножением
-	if (len(a)<=3 || len(b)<=3){
+	if (len(a)<=naiveThreshold || len(b)<=naiveThreshold){
 		return naiveMul(a, b)
 	}
 
