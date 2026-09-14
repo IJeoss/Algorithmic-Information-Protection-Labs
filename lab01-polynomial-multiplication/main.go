@@ -8,4 +8,5 @@ func main(){
 
 	fmt.Println("naive:", naiveMul(a, b))
 	fmt.Println("karatsuba:", karatsuba(a, b))
+	fmt.Println("toom3:", toom3(a, b))
 }

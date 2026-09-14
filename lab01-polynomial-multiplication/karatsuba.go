@@ -1,6 +1,6 @@
 package main
 
-//умножение алгоритмом Карацубы O(n^log2_(3)))
+//умножение алгоритмом Карацубы за O(n^log2_(3)))
 func karatsuba(a, b Polynomial) Polynomial{
 	if (len(a)==0 || len(b)==0){
 		return Polynomial{}
@@ -24,7 +24,7 @@ func karatsuba(a, b Polynomial) Polynomial{
 	z0:=karatsuba(a0, b0)
 	z2:=karatsuba(a1, b1)
 
-	z1:=karatsuba(add(a0, a1), add(b0, b1),)
+	z1:=karatsuba(add(a0, a1), add(b0, b1))
 
 	//z1=a0*b1+a1*b0
 	z1=sub(z1, z0)

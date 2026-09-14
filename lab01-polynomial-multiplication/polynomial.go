@@ -4,14 +4,11 @@ package main
 type Polynomial []float64
 
 
-//функция сложения полиномов (O(n))
+//функция сложения полиномов за O(max(n, m))
 func add(a, b Polynomial) Polynomial{
 	maxLen:=max(len(a), len(b))
 	result:=make(Polynomial, maxLen)
-
-	for i, a_value:=range a{
-		result[i]=a_value
-	}
+	copy(result, a)
 
 	for i, b_value:=range b{
 		result[i]+=b_value
@@ -20,17 +17,28 @@ func add(a, b Polynomial) Polynomial{
 	return result
 }
 
-//функция разности полиномов
+//функция разности полиномов за O(max(n,m))
 func sub(a, b Polynomial)Polynomial{
 	maxLen:=max(len(a), len(b))
 	result:=make(Polynomial, maxLen)
-
-	for i, a_value:=range a{
-		result[i]=a_value
-	}
+	copy(result, a)
 
 	for i, b_value:=range b{
 		result[i]-=b_value
+	}
+	return result
+}
+
+//умножение на константу за O(max(n,m))
+func constMul(p Polynomial, k float64)Polynomial{
+	if (k==0){
+		return Polynomial{}
+	}
+
+	result:=make(Polynomial, len(p))
+
+	for i:=range p{
+		result[i]=p[i]*k
 	}
 	return result
 }
