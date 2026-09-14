@@ -3,9 +3,9 @@ package main
 import "fmt"
 
 func main(){
-	a:=Polynomial{2,3}
-	b:=Polynomial{4,5}
-	c:=naiveMul(a,b)
+	a:=Polynomial{1, 2, 3, 4}
+	b:=Polynomial{5, 6, 7, 8}
 
-	fmt.Println(c)
+	fmt.Println("naive:", naiveMul(a, b))
+	fmt.Println("karatsuba:", karatsuba(a, b))
 }
