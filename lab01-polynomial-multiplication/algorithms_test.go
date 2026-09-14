@@ -97,3 +97,25 @@ func TestPolynomialMultiplication(t *testing.T){
 		}
 	}
 }
+
+func TestRecursiveMultiplication(t *testing.T){
+	a:=make(Polynomial, 40)
+	b:=make(Polynomial, 40)
+
+	for i:=range a {
+		a[i]=float64(i%7 - 3)
+		b[i]=float64(i%5 - 2)
+	}
+
+	expected:=naiveMul(a, b)
+
+	karatsubaResult:=karatsuba(a, b)
+	if !equalPolynomial(karatsubaResult, expected){
+		t.Errorf("karatsuba: expected %v, got %v", expected, karatsubaResult)
+	}
+
+	toom3Result:=toom3(a, b)
+	if !equalPolynomial(toom3Result, expected){
+		t.Errorf("toom3: expected %v, got %v", expected, toom3Result)
+	}
+}

@@ -2,6 +2,8 @@ package main
 
 import "time"
 
+var benchmarkSink float64
+
 //функция измерения алгоритмов умножения
 func measureAlgorithm(algorithm func(Polynomial, Polynomial) Polynomial, a, b Polynomial) time.Duration {
 	start:=time.Now()
@@ -10,8 +12,8 @@ func measureAlgorithm(algorithm func(Polynomial, Polynomial) Polynomial, a, b Po
 
 	elapsed:=time.Since(start)
 
-	
-	_=result
-
+	if len(result)>0{
+		benchmarkSink=result[len(result)-1]
+	}
 	return elapsed
 }

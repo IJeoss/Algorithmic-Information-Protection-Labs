@@ -1,0 +1,12 @@
+#macOS
+.DS_Store
+
+#python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+#go build artifacts
+*.out
+*.exe
