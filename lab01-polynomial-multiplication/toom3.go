@@ -1,7 +1,9 @@
 package main
 
 //функция разделения полинома p на 3 части длины примерно m
+//возвращает headers на изначальный срез p
 func split3(p Polynomial, m int) (Polynomial, Polynomial, Polynomial){
+	//P(x)=P0​(x)+x^mP1​(x)+x^2mP2​(x)
 	end0:=min(m, len(p))
 	end1:=min(2*m, len(p))
 
@@ -29,52 +31,52 @@ func toom3(a, b Polynomial) Polynomial{
 	a0, a1, a2:=split3(a, m)
 	b0, b1, b2:=split3(b, m)
 
-	//A(0)=A0, B(0)=B0
+	//P(0)=P0, P(0)=P0
 	aAt0:=a0
 	bAt0:=b0
 
-	//A(1)=A0+A1+A2
+	//P(1)=P0+P1+P2
 	aAt1:=add(add(a0, a1), a2)
 	bAt1:=add(add(b0, b1), b2)
 
-	//A(-1)=A0-A1+A2
+	//P(-1)=P0-P1+P2
 	aAtMinus1:=add(sub(a0, a1), a2)
 	bAtMinus1:=add(sub(b0, b1), b2)
 
-	//A(2)=A0+2*A1+4*A2
+	//P(2)=P0+2*P1+4*P2
 	aAt2:=add(add(a0, constMul(a1, 2)), constMul(a2, 4))
 	bAt2:=add(add(b0, constMul(b1, 2)), constMul(b2, 4))
 
-	//в точке "бесконечность" берём старший блок
+	//P(inf)=P_degree на бесконечности берется старший блок
 	aAtInf:=a2
 	bAtInf:=b2
-
-	v0:=toom3(aAt0, bAt0)
-	v1:=toom3(aAt1, bAt1)
-	vMinus1:=toom3(aAtMinus1, bAtMinus1)
-	v2:=toom3(aAt2, bAt2)
-	vInf:=toom3(aAtInf, bAtInf)
+	
+	v0:=toom3(aAt0, bAt0)//C(0)=C0=A(0)B(0)
+	v1:=toom3(aAt1, bAt1)//C(1)=C0+C1+C2+C3+C4=A(1)B(1)
+	vMinus1:=toom3(aAtMinus1, bAtMinus1)//C(-1)=C0-C1+C2-C3+C4=A(-1)B(-1)
+	v2:=toom3(aAt2, bAt2)//C(2)=C0+2C1+4C2+8C3+16C4=A(2)B(2)
+	vInf:=toom3(aAtInf, bAtInf)//C(inf)=C_degree
 
 	c0:=v0
 	c4:=vInf
 
-	//s1=C1+C2+C3
-	s1:=sub(sub(v1, c0), c4)
+	//решаем уравнения методом переброски вправо
 
-	//sMinus1=-C1+C2-C3
-	sMinus1:=sub(sub(vMinus1, c0), c4)
-	c2:=constMul(add(s1, sMinus1), 0.5)
+	s1:=sub(sub(v1, c0), c4)//s1=C1+C2+C3 (убираем известные C0, C4)
+
+	sMinus1:=sub(sub(vMinus1, c0), c4)//sMinus1=-C1+C2-C3 (убираем известные C0, C4)
+	c2:=constMul(add(s1, sMinus1), 0.5)//решаем систему медотом сложения
 
 	//t=C1+C3
-	t:=constMul(sub(s1, sMinus1), 0.5)
+	t:=constMul(sub(s1, sMinus1), 0.5)//s1-sMinus1=2*(C1 + C3)
 
 	//убираем из C(2) уже известные C0 и 16*C4
 	temp:=sub(sub(v2, c0), constMul(c4, 16))
 
 	//u=C1+2*C2+4*C3
 	u:=constMul(temp, 0.5)
-	c3:=constMul(sub(sub(u, t),constMul(c2, 2)), 1.0/3.0)
-	c1:=sub(t, c3)
+	c3:=constMul(sub(sub(u, t), constMul(c2, 2)), 1.0/3.0)//[u-t-2C2]/3
+	c1:=sub(t, c3)//t-C3
 
 	result:=make(Polynomial, len(a)+len(b)-1)
 

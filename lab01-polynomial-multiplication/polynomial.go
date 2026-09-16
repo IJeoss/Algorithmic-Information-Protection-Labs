@@ -1,6 +1,6 @@
 package main
 
-//полином хранит коэффициенты (степень полинома=размер полинома - 1)
+//полином хранит коэффициенты (степень полинома=размер полинома - 1), макс. степень, под которую выделена память слайса
 type Polynomial []float64
 
 const naiveThreshold=32
@@ -12,8 +12,8 @@ func add(a, b Polynomial) Polynomial{
 	result:=make(Polynomial, maxLen)
 	copy(result, a)
 
-	for i, b_value:=range b{
-		result[i]+=b_value
+	for i, bValue:=range b{
+		result[i]+=bValue
 	}
 
 	return result
@@ -25,22 +25,21 @@ func sub(a, b Polynomial)Polynomial{
 	result:=make(Polynomial, maxLen)
 	copy(result, a)
 
-	for i, b_value:=range b{
-		result[i]-=b_value
+	for i, bValue:=range b{
+		result[i]-=bValue
 	}
 	return result
 }
 
-//умножение на константу за O(max(n,m))
+//умножение на константу за O(n)
 func constMul(p Polynomial, k float64)Polynomial{
-	if (k==0){
-		return Polynomial{}
+	if k==0{
+		return Polynomial{0}
 	}
-
 	result:=make(Polynomial, len(p))
 
-	for i:=range p{
-		result[i]=p[i]*k
+	for i, value:=range p{
+		result[i]=value*k
 	}
 	return result
 }

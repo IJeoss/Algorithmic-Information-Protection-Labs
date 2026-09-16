@@ -1,7 +1,8 @@
 package main
 
 import("math"
-	"testing")
+	"testing"
+)
 
 
 const eps=1e-9
@@ -64,7 +65,7 @@ func TestPolynomialMultiplication(t *testing.T){
 			expected:Polynomial{0, 0, 0},
 		},
 		{
-			name:"recursive case",
+			name:"sparse polynomial",
 			a:Polynomial{1, 0, 0, 0, 1},
 			b:Polynomial{1, 0, 0, 1},
 			expected:Polynomial{1, 0, 0, 1, 1, 0, 0, 1},
@@ -83,6 +84,7 @@ func TestPolynomialMultiplication(t *testing.T){
 
 	for _, test:=range tests{
 		for _, algorithm:=range algorithms{
+			//запуск подтеста
 			t.Run(test.name+"/"+algorithm.name, func(t *testing.T){
 				got:=algorithm.mul(test.a, test.b)
 
