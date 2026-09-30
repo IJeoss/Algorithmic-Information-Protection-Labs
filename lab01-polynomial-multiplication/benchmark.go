@@ -5,7 +5,7 @@ import "time"
 //хранит часть результата алгоритма, чтобы результат вычисления не был полностью неиспользуемым при измерении производительности
 var benchmarkSink float64
 
-//функция измерения времени выполнения алгоритмов умножения
+//функция измерения времени выполнения алгоритмов умножения. результат в нс
 func measureAlgorithm(algorithm func(Polynomial, Polynomial) Polynomial, a, b Polynomial) time.Duration{
 	start:=time.Now()
 
