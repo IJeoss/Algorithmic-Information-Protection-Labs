@@ -70,6 +70,24 @@ func TestPolynomialMultiplication(t *testing.T){
 			b:Polynomial{1, 0, 0, 1},
 			expected:Polynomial{1, 0, 0, 1, 1, 0, 0, 1},
 		},
+		{
+			name:     "empty left polynomial",
+			a:        Polynomial{},
+			b:        Polynomial{1, 2, 3},
+			expected: Polynomial{},
+		},
+		{
+			name:     "empty right polynomial",
+			a:        Polynomial{1, 2, 3},
+			b:        Polynomial{},
+			expected: Polynomial{},
+		},
+		{
+			name:     "both polynomials empty",
+			a:        Polynomial{},
+			b:        Polynomial{},
+			expected: Polynomial{},
+		},
 	}
 
 	//все реализации должны давать один и тот же правильный результат
@@ -104,7 +122,7 @@ func TestRecursiveMultiplication(t *testing.T){
 	a:=make(Polynomial, 40)
 	b:=make(Polynomial, 40)
 
-	for i:=range a {
+	for i:=range a{
 		a[i]=float64(i%7 - 3)
 		b[i]=float64(i%5 - 2)
 	}
