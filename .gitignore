@@ -1,12 +1,22 @@
-#macOS
+# macOS
 .DS_Store
 
-#python
+# Python
 __pycache__/
 *.pyc
 .venv/
 venv/
 
-#go build artifacts
+# Go build and test artifacts
 *.out
 *.exe
+*.test
+*.prof
+*.pprof
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+trash.txt
