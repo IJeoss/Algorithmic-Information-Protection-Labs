@@ -43,13 +43,23 @@ func buildLookupTable(b matrix, startRow, blockSize int) lookupTable{
 }
 
 func getBlockMask(a matrix, row, startCol, blockSize int) int{
-	mask:=0
-	for bit:=range blockSize{
-		if a.getElement(row, startCol+bit){
-			mask|=0b1 << bit
-		}
+	if blockSize<=0 || blockSize>bitsPerWord || startCol<0 || startCol+blockSize>a.size{
+		panic("invalid block parameters")
 	}
-	return mask
+
+	rowData:=a.getRow(row)
+
+	wordIndex:=startCol/bitsPerWord
+	bitOffset:=startCol%bitsPerWord
+
+	value:=rowData[wordIndex]>>bitOffset
+
+	if bitOffset+blockSize>bitsPerWord{
+		value|=rowData[wordIndex+1]<<(bitsPerWord-bitOffset)
+	}
+
+	mask:=^bitWord(0)>>(bitsPerWord-blockSize)
+	return int(value&mask)
 }
 
 func fourRussiansMultiply(a, b matrix, k int) matrix{
@@ -57,19 +67,19 @@ func fourRussiansMultiply(a, b matrix, k int) matrix{
 		panic(fmt.Sprintf("matrix sizes do not match for multiplication: a.size=%d, b.size=%d", a.size, b.size))
 	}
 
-	if k<=0 || k>a.size{
-		panic("invalid block size for four Russians method")
+	if k<=0 || k>a.size || k>16{
+		panic("invalid block size for four Russians method: k must be between 1 and min(N, 16)")
 	}
 
 	n:=a.size
-	result := newMatrix(n)
+	result:=newMatrix(n)
 
 	for start:=0; start<n; start+=k{
 		blockSize:=min(k, n-start)
 		table:=buildLookupTable(b, start, blockSize)
 
-		for i := range n {
-			mask := getBlockMask(a, i, start, blockSize)
+		for i:=range n{
+			mask:=getBlockMask(a, i, start, blockSize)
 			xorRows(result.getRow(i), table.getRow(mask))
 		}
 	}

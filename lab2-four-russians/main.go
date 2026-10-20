@@ -1,45 +1,47 @@
 package main
 
-const size=2
-
-//TODO: метод 4-х русских эффективен начиная с матриц 16x16. Хотя по заданию следует сделать замеры для  8x8, 16x16, 32x32, 64x64, 128x128, 256x256 n={3, ..., 8}
-
+import (
+	"flag"
+	"fmt"
+	"os"
+	"time"
+)
 
 func main(){
+	size:=flag.Int("size", 8, "matrix dimension: 8, 16, 32, 64, 128 or 256")
+	k:=flag.Int("k", 3, "number of rows in a Four Russians block (1..8)")
+	flag.Parse()
 
-	// a:=newMatrix(size)
-	// b:=newMatrix(size)
+	if *size < 8 || *size > 256 || (*size&(*size-1)) != 0{
+		fmt.Fprintln(os.Stderr, "size must be one of 8, 16, 32, 64, 128, 256")
+		os.Exit(2)
+	}
+	if *k < 1 || *k > 8 || *k > *size{
+		fmt.Fprintln(os.Stderr, "k must be between 1 and 8")
+		os.Exit(2)
+	}
 
-	// for i:=range size{
-	// 	for j:=range size{
-	// 		a.SetElement(i, j, (i+j)%2==0)
-	// 		b.SetElement(i, j, (i+j)%2==1)
-	// 	}
-	// }
-	// fmt.Println("Matrix A:")
-	// fmt.Println()
-	// fmt.Println(a)
-	// fmt.Println("Matrix B:")
-	// fmt.Println()
-	// fmt.Println(b)
+	a, b:=newMatrix(*size), newMatrix(*size)
+	for i:=0; i < *size; i++{
+		for j:=0; j < *size; j++{
+			a.setElement(i, j, (i*7+j*3)%5==0)
+			b.setElement(i, j, (i*11+j*13)%7 < 3)
+		}
+	}
 
-	// a.SetElement(23,1, true)
+	start:=time.Now()
+	result:=fourRussiansMultiply(a, b, *k)
+	elapsed:=time.Since(start)
 
-	// c:=NaiveMultiply(a, b)
-	// fmt.Println("Matrix C=A*B:")
-	// fmt.Println()
-	// fmt.Println(c)
+	expected:=naiveMultiply(a, b)
+	if !result.isEqual(expected){
+		fmt.Fprintln(os.Stderr, "ERROR: results of algorithms differ")
+		os.Exit(1)
+	}
 
-	// d:=SumMatrix(a, b)
-	// fmt.Println("Matrix D=A+B:")
-	// fmt.Println()
-	// fmt.Println(d)
-
-	// d.SetElement(1,1,false)
-	// fmt.Println("Matrix D after setting D[1][1]=0:")
-	// fmt.Println()
-	// fmt.Println(d)
-
-	
-
+	fmt.Printf("N=%d, k=%d, Four Russians: %s, correct=true\n", *size, *k, elapsed)
+	if *size <= 8{
+		fmt.Printf("A:\n%s\nB:\n%s\nA*B:\n%s", a, b, result)
+	}
+	fmt.Println("For reliable timings use: go test -run '^$' -bench .")
 }
